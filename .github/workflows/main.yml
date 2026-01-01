@@ -1,0 +1,27 @@
+name: Update Free Nodes
+on:
+  schedule:
+    - cron: '0 */6 * * *' # 每 6 小时自动运行一次
+  workflow_dispatch:      # 允许手动运行
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Run Script
+        run: |
+          # 这里填写你爬取节点的命令，例如：
+          # curl -L "https://某个免费源.com/clash" -o nodes.yaml
+          # 实际项目中这里通常运行一个 python 脚本
+          python3 main.py 
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add .
+          git commit -m "Update nodes: $(date)" || exit 0
+          git push
